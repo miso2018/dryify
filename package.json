@@ -1,0 +1,31 @@
+{
+  "name": "dryify",
+  "version": "0.1.0",
+  "description": "A utility module to reduce your LOC by abstracting the most repeated sequences into single function calls.",
+  "main": "dryify.js",
+  "scripts": {
+    "build": "echo 'Run this command to build using npm:\n\t$ npm run-script build' && ./node_modules/.bin/uglifyjs ./dryify.js -c -m --output ./dryify.min.js",
+    "test": "./node_modules/.bin/mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brilliantmichael/dryify.git"
+  },
+  "keywords": [
+    "dryify",
+    "utility",
+    "dry",
+    "loc"
+  ],
+  "author": "Michael Isidro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brilliantmichael/dryify/issues"
+  },
+  "homepage": "https://github.com/brilliantmichael/dryify",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^2.2.x",
+    "uglify-js": "^2.4.23"
+  }
+}
