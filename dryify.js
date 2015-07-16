@@ -31,8 +31,8 @@
 
       var fnArgs = fnStr
         .slice(
-          fnStr.indexOf('(') + 1,
-          fnStr.indexOf(')')
+          fnStr.indexOf("(") + 1,
+          fnStr.indexOf(")")
         )
         .match(/([^\s,]+)/g) || [];
 
@@ -49,7 +49,7 @@
       }
 
       return new Function(
-        'opts',
+        "opts",
         fnPrepend + fnStr.slice(fnStr.indexOf("{") + 1, fnStr.lastIndexOf("}"))
       );
     };
@@ -59,7 +59,7 @@
     // an evaluated string, and a configurable return value or behaviour when
     // not found.
     //
-    // Saves you from the repition of 'if... exists...' LOC.
+    // Saves you from the repitition of 'if... exists...'.
     //
     // Required
     // --------
@@ -119,7 +119,6 @@
           jsonPath = [];
         }
       } else {
-        console.log(opts);
         throw Error(
           "@jsonPath must be a string. Type is [" + (typeof jsonPath) + "]"
         );
