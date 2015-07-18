@@ -1,6 +1,6 @@
 {
   "name": "dryify",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A utility module to reduce your LOC by abstracting the most repeated sequences into single function calls.",
   "main": "dryify.js",
   "scripts": {
