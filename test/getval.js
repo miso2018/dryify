@@ -22,9 +22,9 @@
   //---------------------------------------------------------------------------
   // lib
   //---------------------------------------------------------------------------
-  var dryify = require('../dryify.min.js');
+  var dryify = require('../dryify.js');
 
-  describe("dryify.getval", function() {
+  describe("dryify.getval(startingReference, jsonPath, ifNull)", function() {
 
     // fixture data
     var randomNum = Math.random();
@@ -76,7 +76,7 @@
     );
 
     it(
-      "should return null by default if @startingReference is empty",
+      "should return null by default if @jsonPath is not found",
       function() {
 
         assert.equal(

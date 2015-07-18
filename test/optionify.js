@@ -19,9 +19,11 @@
   //---------------------------------------------------------------------------
   // lib
   //---------------------------------------------------------------------------
-  var dryify = require('../dryify.min.js');
+  var dryify = require('../dryify.js');
+  var dryifyMin = require('../dryify.min.js');
 
-  describe("dryify.optionify", function() {
+
+  describe("dryify.optionify(fn, orderedParamNames)", function() {
 
     var testFn = function(
       boolean_,
@@ -41,6 +43,14 @@
       ];
     };
 
+    it("should work with native functions", function() {
+      assert.equal(
+        dryify.optionify(parseInt, ['string'])({
+          string: "13579"
+        }),
+        13579
+      );
+    });
 
     it(
       "should evaluate an options object to the same result as the original arguments",
@@ -71,14 +81,19 @@
       function() {
 
         assert.deepEqual(
-          dryify.optionify(
-            dryify.getval
+
+          dryifyMin.optionify(
+            dryifyMin.getval, [
+              'startingReference',
+              'jsonPath'
+            ]
           )({
             startingReference: {
               foo: "bar"
             },
             jsonPath: "foo"
           }),
+
           "bar"
         );
       }
