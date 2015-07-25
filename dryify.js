@@ -19,8 +19,8 @@
 
       // Private methods
 
-      // Privileged methods used repeatedly by prototypical (public) methods in
-      // this module
+      // Privileged (protected) methods used repeatedly by prototypical
+      // (public) methods in this module
 
       //-----------------------------------------------------------------------
       // Ripped from lodash
@@ -101,7 +101,6 @@
         return jsonPath;
       };
     };
-    // Dog.prototype = new Mammal(); // inheritence
 
     //-------------------------------------------------------------------------
     //
@@ -114,9 +113,9 @@
     //
     // Required
     // --------
-    // @fn - function - the function to convert into an equivalent function that
-    //                  accepts a single options object instead of multiple
-    //                  parameter arguments
+    // @fn - function - the function to convert into an equivalent function
+    //                  that accepts a single options object instead of
+    //                  multiple parameter arguments
     //
     // Optional
     // --------
@@ -141,43 +140,31 @@
 
         // In the case where the function has been minified and the parameter
         // names differ from the original keys used in the options object,
-        // you can no longer obtain the argument values without falling back to
-        // a convention such as using the key-value pairs in order as in a
-        // "for (var x in y) {}" loop.
+        // you can no longer obtain the argument values without providing the
+        // @orderParamNames array
 
-        // remember this may be minified
-        var fnArgs = orderedParamNames instanceof Array ?
-          orderedParamNames :
+        var argsToApply = [];
+        var opnLength;
+
+        if (!(orderedParamNames instanceof Array)) {
           // Only use regex to get the param names if they have not been
           // supplied
-          self._getFunctionParameterNames(fn);
-        var argsArray = [];
-        var counter = 0;
-
-        for (var key in options) {
-          if (key === fnArgs[counter]) {
-            // the key name and ordered parameter name match
-            argsArray.push(options[key]);
-          } else {
-            throw Error(
-              "@options provided with mismatched keys to parameter names. This is usually because the function is minified. Please either re-order the options object, or explicitly provide the ordered parameter names in @orderedParamNames"
-            );
-          }
-
-          counter++;
+          orderedParamNames = self._getFunctionParameterNames(fn);
         }
 
-        //c-onsole.log(
-        //  [
-        //    fnArgs,
-        //    options,
-        //    argsArray
-        //  ]
-        //);
+        opnLength = orderedParamNames.length;
+
+        // Keys can possibly be iterated in any order. In the event the names
+        // don't match, we assume the ordering provided in @orderParamNames
+        // maps to the parameters required in the function
+
+        while (opnLength--) {
+          argsToApply[opnLength] = options[ orderedParamNames[opnLength] ];
+        }
 
         return fn.apply(
           self, // pass the outer context provided as @this into the function
-          argsArray
+          argsToApply
         );
       };
     };

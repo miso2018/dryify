@@ -19,9 +19,7 @@
   //---------------------------------------------------------------------------
   // lib
   //---------------------------------------------------------------------------
-  var dryify = require('../dryify.js');
-  var dryifyMin = require('../dryify.min.js');
-
+  var dryify = require('../dryify.min.js') || require('../dryify.js');
 
   describe("dryify.optionify(fn, orderedParamNames)", function() {
 
@@ -49,6 +47,21 @@
           string: "13579"
         }),
         13579
+      );
+    });
+
+    it("should work with unordered options and undefined arguments", function() {
+
+      function simpleFn(arg1, arg2, arg3) {
+        return (arg1 || "") + (arg2 || "") + (arg3 || "");
+      }
+
+      assert.equal(
+        dryify.optionify(simpleFn, ['mapper1', 'mapper2', 'mapper3'])({
+          mapper3: "world",
+          mapper1: "hello, "
+        }),
+        "hello, world"
       );
     });
 
@@ -82,8 +95,8 @@
 
         assert.deepEqual(
 
-          dryifyMin.optionify(
-            dryifyMin.getval, [
+          dryify.optionify(
+            dryify.getval, [
               'startingReference',
               'jsonPath'
             ]

@@ -22,7 +22,7 @@
   //---------------------------------------------------------------------------
   // lib
   //---------------------------------------------------------------------------
-  var dryify = require('../dryify.js');
+  var dryify = require('../dryify.min.js') || require('../dryify.js');
 
   describe("dryify.getval(startingReference, jsonPath, ifNull)", function() {
 
