@@ -2,7 +2,6 @@
 // Takes a single argument - a function - and converts it into the same
 // function that can take the arguments in the form of an 'options' object
 //-----------------------------------------------------------------------------
-;
 (function() {
 
   "use strict";
@@ -19,7 +18,7 @@
   //---------------------------------------------------------------------------
   // lib
   //---------------------------------------------------------------------------
-  var dryify = require('../dryify.min.js') || require('../dryify.js');
+  var dryify = require('../dryify.min.js');
 
   describe("dryify.optionify(fn, orderedParamNames)", function() {
 

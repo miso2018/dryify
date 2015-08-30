@@ -1,9 +1,5 @@
 //-----------------------------------------------------------------------------
-// Allows the elegant retrieval of a JSON value using a starting reference,
-// an evaluated string, and a configurable return value or behaviour when not
-// found.
-//
-// Saves you from the repition of 'if... exists...' LOC.
+// Provide the option for compatability with older versions of this module.
 //-----------------------------------------------------------------------------
 (function() {
 
@@ -23,31 +19,10 @@
   //---------------------------------------------------------------------------
   var dryify = require('../dryify.min.js');
 
-  describe("dryify.traverse(json, callback)", function() {
+  describe("dryify.noConflict()", function() {
 
-    it("should pass in the non-function values of a JSON object in expected order", function() {
-
-      // fixture data
-      var json = [{
-        key0: [{
-          key2: [{
-            key3: false
-          }]
-        }],
-        key1: false
-      }];
-
-      dryify.traverse(json, function(v, i) {
-        if (v === false) {
-          v = i;
-        }
-
-        return v;
-      });
-
-      assert.equal(json[0].key0[0].key2[0].key3, 0);
-      assert.equal(json[0].key1, 1);
-
+    it("should return an instance of Dryify", function() {
+      assert.equal(dryify.noConflict() instanceof dryify.Dryify, true);
     });
 
   });

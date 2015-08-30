@@ -5,7 +5,6 @@
 //
 // Saves you from the repition of 'if... exists...' LOC.
 //-----------------------------------------------------------------------------
-;
 (function() {
 
   "use strict";
@@ -22,7 +21,7 @@
   //---------------------------------------------------------------------------
   // lib
   //---------------------------------------------------------------------------
-  var dryify = require('../dryify.min.js') || require('../dryify.js');
+  var dryify = require('../dryify.min.js');
 
   describe("dryify.setval(startingReference, jsonPath, value, ifPathNotFound)", function() {
 

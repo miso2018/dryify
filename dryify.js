@@ -4,102 +4,105 @@
 // Copyright 2015 Michael Isidro
 // Available under ISC license <http://opensource.org/licenses/ISC>
 //---------------------------------------------------------------------------
-;
 (function() {
 
   "use strict";
 
   var self = this; // equivalent to @window in the browser
   var olderDryify = self.dryify;
-
-  var Dryify = (function() {
+  var dryify = (function() {
 
     // http://stackoverflow.com/a/8580611
     function Dryify() {
+      if (arguments.length) {
+        throw new Error('Dryify expects a call to a method');
+      }
+    }
 
-      // Private methods
+    // Private methods
 
-      // Privileged (protected) methods used repeatedly by prototypical
-      // (public) methods in this module
+    //-----------------------------------------------------------------------
+    // Ripped from lodash
+    //
+    // Required
+    // --------
+    // @array - array - an array to remove falsy elements from
+    //-----------------------------------------------------------------------
+    function _compact(array) {
 
-      //-----------------------------------------------------------------------
-      // Ripped from lodash
-      //
-      // Required
-      // --------
-      // @array - array - an array to remove falsy elements from
-      //-----------------------------------------------------------------------
-      this._compact = function(array) {
+      var index = -1;
+      var length = array ? array.length : 0;
+      var resIndex = -1;
+      var result = [];
 
-        var index = -1;
-        var length = array ? array.length : 0;
-        var resIndex = -1;
-        var result = [];
-
-        while (++index < length) {
-          var value = array[index];
-          if (value) {
-            result[++resIndex] = value;
-          }
+      while (++index < length) {
+        var value = array[index];
+        if (value) {
+          result[++resIndex] = value;
         }
-        return result;
-      };
+      }
+      return result;
+    };
 
-      //-----------------------------------------------------------------------
-      // Extracts @fn's parameter names as strings in an array
-      //
-      // Required
-      // --------
-      // @fn - function - the function to get the parameter names from
-      //-----------------------------------------------------------------------
-      this._getFunctionParameterNames = function(fn) {
+    //-----------------------------------------------------------------------
+    // Extracts @fn's parameter names as strings in an array
+    //
+    // Required
+    // --------
+    // @fn - function - the function to get the parameter names from
+    //-----------------------------------------------------------------------
+    function _getFunctionParameterNames(fn) {
 
-        // http://stackoverflow.com/a/9924463
-        var fnStr = fn.toString();
+      // http://stackoverflow.com/a/9924463
+      var fnStr = fn.toString();
 
-        return fnStr
-          .slice(
-            fnStr.indexOf("(") + 1,
-            fnStr.indexOf(")")
-          )
-          .match(/([^\s,]+)/g) || [];
-      };
+      return fnStr
+        .slice(
+          fnStr.indexOf("(") + 1,
+          fnStr.indexOf(")")
+        )
+        .match(/([^\s,]+)/g) || [];
+    };
 
-      //-----------------------------------------------------------------------
-      // Translates a JSON path string into an array of key references
-      // Used internally by @getval, @setval
-      //
-      // Required
-      // --------
-      // @jsonPath - string - the path string
-      //                      The convention uses strings like:
-      //                      "[3].key1[2].key2"
-      //                      "key1.key2[1]"
-      //                      etc...
-      //-----------------------------------------------------------------------
-      this._interpretJsonPath = function(jsonPath) {
+    //-----------------------------------------------------------------------
+    // Translates a JSON path string into an array of key references
+    // Used internally by @getval, @setval
+    //
+    // Required
+    // --------
+    // @jsonPath - string - the path string
+    //                      The convention uses strings like:
+    //                      "[3].key1[2].key2"
+    //                      "key1.key2[1]"
+    //                      etc...
+    //-----------------------------------------------------------------------
+    function _interpretJsonPath(jsonPath) {
 
-        if (typeof jsonPath === 'string') {
-          if (jsonPath) {
+      if (typeof jsonPath === 'string') {
+        if (jsonPath) {
 
-            jsonPath = this._compact(jsonPath.split(/[\]\.]+|\[|\]/g));
+          jsonPath = _compact(jsonPath.split(/[\]\.]+|\[|\]/g));
 
-            for (var i = 0; i < jsonPath.length; i++) {
-              if (!isNaN(jsonPath[i])) {
-                jsonPath[i] = parseInt(jsonPath[i]);
-              }
+          for (
+            var i = 0, path; i < jsonPath.length; i++
+          ) {
+
+            path = jsonPath[i];
+
+            if (!isNaN(path)) {
+              path = parseInt(path);
             }
-          } else {
-            jsonPath = [];
           }
         } else {
-          throw Error(
-            "@jsonPath must be a string. Type is [" + (typeof jsonPath) + "]"
-          );
+          jsonPath = [];
         }
+      } else {
+        throw Error(
+          "@jsonPath must be a string. Type is [" + (typeof jsonPath) + "]"
+        );
+      }
 
-        return jsonPath;
-      };
+      return jsonPath;
     };
 
     //-------------------------------------------------------------------------
@@ -149,7 +152,7 @@
         if (!(orderedParamNames instanceof Array)) {
           // Only use regex to get the param names if they have not been
           // supplied
-          orderedParamNames = self._getFunctionParameterNames(fn);
+          orderedParamNames = _getFunctionParameterNames(fn);
         }
 
         opnLength = orderedParamNames.length;
@@ -159,7 +162,7 @@
         // maps to the parameters required in the function
 
         while (opnLength--) {
-          argsToApply[opnLength] = options[ orderedParamNames[opnLength] ];
+          argsToApply[opnLength] = options[orderedParamNames[opnLength]];
         }
 
         return fn.apply(
@@ -205,20 +208,25 @@
         }
       }
 
-      jsonPath = this._interpretJsonPath(jsonPath);
+      jsonPath = _interpretJsonPath(jsonPath);
 
       if (!startingReference) {
         return notFound(ifNull);
       }
       // This loop has to ascend
-      for (var i = 0; i < jsonPath.length; i++) {
+      for (
+        var i = 0, path; i < jsonPath.length; i++
+      ) {
+
+        path = jsonPath[i];
+
         if (!startingReference ||
-          typeof startingReference[jsonPath[i]] === 'undefined' ||
-          typeof startingReference[jsonPath[i]] === null
+          typeof startingReference[path] === 'undefined' ||
+          typeof startingReference[path] === null
         ) {
           return notFound(ifNull);
         } else {
-          startingReference = startingReference[jsonPath[i]];
+          startingReference = startingReference[path];
         }
       }
 
@@ -261,8 +269,6 @@
     Dryify.prototype.setval = function(startingReference, jsonPath, value, ifPathNotFound) {
 
       var currentReference = startingReference;
-      var loopKey;
-      var loopKeyPlus;
 
       if (
         typeof currentReference !== 'object' || typeof jsonPath !== 'string'
@@ -270,10 +276,12 @@
         throw Error("@setval missing some mandatory arguments");
       }
 
-      jsonPath = this._interpretJsonPath(jsonPath);
+      jsonPath = _interpretJsonPath(jsonPath);
 
       // This loop has to ascend
-      for (var i = 0; i < jsonPath.length; i++) {
+      for (
+        var i = 0, loopKey, loopKeyPlus; i < jsonPath.length; i++
+      ) {
 
         // DRY.
         loopKey = jsonPath[i];
@@ -344,18 +352,10 @@
       }
 
       return iter(json);
-    }
-
-    //-------------------------------------------------------------------------
-    // Provide the option for compatability with older versions of this module
-    // http://www.richardrodger.com/2013/09/27/how-to-make-simple-node-js-modules-work-in-the-browser/
-    //-------------------------------------------------------------------------
-    Dryify.prototype.noConflict = function() {
-
-      self.dryify = olderDryify;
-
-      return dryify;
     };
+
+    dryify = new Dryify();
+    dryify.Dryify = Dryify; // make constructor available
 
     //-------------------------------------------------------------------------
     // Export the module / assign to @this context
@@ -363,16 +363,29 @@
     //
     // node
     if (typeof exports !== 'undefined') {
+
       if (typeof module !== 'undefined' && module.exports) {
-        exports = module.exports = new Dryify();
+        exports = module.exports = dryify;
       }
-      exports.dryify = new Dryify();
+
+      exports.dryify = dryify;
+
     } else {
       // browser
-      self.dryify = new Dryify();
+      self.dryify = dryify;
     }
 
-    return Dryify;
+    return dryify;
+
   }());
+
+  //-------------------------------------------------------------------------
+  // Provide the option for compatability with older versions of this module
+  // http://www.richardrodger.com/2013/09/27/how-to-make-simple-node-js-modules-work-in-the-browser/
+  //-------------------------------------------------------------------------
+  dryify.noConflict = function() {
+    self.dryify = olderDryify; // publish older version
+    return dryify; // allow chaining
+  };
 
 }.call(this)); // Calls the window object in the browser
