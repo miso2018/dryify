@@ -24,8 +24,7 @@ patterns for retrieving, changing and passing in JSON objects.
 
 ---------------------------------------
 
-<a name="optionify" />
-### optionify(fn, [orderedParamNames])
+### <a name="optionify" ></a>optionify(fn, [orderedParamNames])
 
 Takes a single argument, a function, and returns a wrapper of the same function
 that can take the arguments in the form of an 'options' object.
@@ -78,8 +77,7 @@ optionifiedFn({
 
 ---------------------------------------
 
-<a name="getval" />
-### getval(startingReference, jsonPath, [ifNull])
+### <a name="getval" ></a>getval(startingReference, jsonPath, [ifNull])
 
 Allows the elegant retrieval of a JSON value using a starting reference, an
 evaluated string, and a configurable return value or behaviour when not found.
@@ -120,8 +118,7 @@ dryify.getval(
 
 ---------------------------------------
 
-<a name="setval" />
-### setval(startingReference, jsonPath, value, [ifPathNotFound])
+### <a name="setval" ></a>setval(startingReference, jsonPath, value, [ifPathNotFound])
 
 Allows the elegant setting of a JSON value using a starting reference, an
 evaluated string, and configurable behaviour when not found.
@@ -180,8 +177,7 @@ dryify.setval(
 
 ---------------------------------------
 
-<a name="traverse" />
-### traverse(json, callback)
+### <a name="traverse" ></a>traverse(json, callback)
 
 Traverses an entire JSON object hierarchically, iterating over every key and
 value referentially.
@@ -190,9 +186,8 @@ __Arguments__
 
 * `json`      (object) the JSON to traverse
 * `callback`  (function) a function that passes in the value and index of the
-              traversal as the arguments (v, i). The callback function must
-              return the passed-in value or else it will be assigned as
-              undefined.
+              traversal as the arguments (v, i). The callback function now
+              leaves the original value in place by default.
 
 __Examples__
 
@@ -208,8 +203,7 @@ dryify.traverse(json, function(v, i) {
 
 ---------------------------------------
 
-<a name="noConflict" />
-### noConflict()
+### <a name="noConflict" ></a>noConflict()
 
 Changes the value of `dryify` back to its original value, returning a reference
 to the `dryify` object.

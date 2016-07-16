@@ -333,8 +333,6 @@
     // @json      - object    - the JSON to traverse
     // @callback  - function  - a function that passes in the value and
     //                          index of the traversal as the arguments (v, i).
-    //                          The callback function must return the passed-in
-    //                          value or else it will be assigned as undefined.
     //-------------------------------------------------------------------------
     Dryify.prototype.traverse = function(json, callback) {
 
@@ -342,7 +340,8 @@
         var counter = 0;
         for (var k in o) {
           if (typeof(o[k]) !== 'function') {
-            o[k] = callback(o[k], counter++);
+            // No longer mandatory to pass back value (passed back by default)
+            o[k] = callback(o[k], counter++) || o[k];
             if (!!o[k] && typeof(o[k]) === 'object') {
               iter(o[k]);
             }
