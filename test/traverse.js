@@ -37,7 +37,8 @@
         key1: false
       }];
 
-      dryify.traverse(json, function(v, i) {
+      dryify.traverse(json, function(v, i, path) {
+
         if (v === false) {
           v = i;
         }

@@ -331,27 +331,44 @@
     // Required
     // --------
     // @json      - object    - the JSON to traverse
-    // @callback  - function  - a function that passes in the value and
-    //                          index of the traversal as the arguments (v, i).
+    // @callback  - function  - a function that passes in the value, index,
+    //                          and reference-path  of the traversal as the
+    //                          arguments (v [any], i [Number], path [Array]).
     //-------------------------------------------------------------------------
     Dryify.prototype.traverse = function(json, callback) {
 
-      function iter(o) {
+      // @path - {object} Array - path keys
+      function iter(o, path) {
+
         var counter = 0;
-        for (var k in o) {
-          if (typeof(o[k]) !== 'function') {
+        var newPath;
+
+        for (var property in o) {
+
+          if (typeof(o[property]) !== 'function') {
+
             // No longer mandatory to pass back value (passed back by default)
-            o[k] = callback(o[k], counter++) || o[k];
-            if (!!o[k] && typeof(o[k]) === 'object') {
-              iter(o[k]);
+            o[property] =
+              callback(o[property], counter++, path) || o[property];
+
+            if (!!o[property] && typeof(o[property]) === 'object') {
+
+              // Pass in a cloned Array
+              newPath = path.slice();
+              newPath.push(property);
+
+              iter(o[property], newPath);
             }
           }
         }
+
         return o;
       }
 
-      return iter(json);
+      return iter(json, []);
     };
+
+    //-------------------------------------------------------------------------
 
     dryify = new Dryify();
     dryify.Dryify = Dryify; // make constructor available
