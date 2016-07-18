@@ -185,15 +185,15 @@ value referentially.
 __Arguments__
 
 * `json`      (object) the JSON to traverse
-* `callback`  (function) a function that passes in the value and index of the
-              traversal as the arguments (v, i). The callback function now
+* `callback`  (function) a function that passes in the value, index and path of the
+              traversal as the arguments (v, i, path). The callback function now
               leaves the original value in place by default.
 
 __Examples__
 
 
 ```js
-dryify.traverse(json, function(v, i) {
+dryify.traverse(json, function(v, i, path) {
 
   // Your changes here
 
